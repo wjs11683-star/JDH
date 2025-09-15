@@ -7,6 +7,8 @@ import dohoon.jun.Exam.springbootdeveloper.domain.Article;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
+
 @RequiredArgsConstructor // final 이 붙거나 @NotNull이 붙은 필드의 생성자 추가
 @Service // 빈으로 등록
 public class BlogService {
@@ -16,5 +18,9 @@ public class BlogService {
     public Article save(AddArticleRequest request){
         return blogRepository.save(request.toEntity());
 
+    }
+    //findall를 호출하여 article 테이블 모두 조회
+    public List<Article> findAll(){
+        return blogRepository.findAll();
     }
 }

@@ -1,13 +1,17 @@
 package dohoon.jun.Exam.springbootdeveloper.Controller;
 import dohoon.jun.Exam.springbootdeveloper.DTO.AddArticleRequest;
+import dohoon.jun.Exam.springbootdeveloper.DTO.ArticleResponse;
 import dohoon.jun.Exam.springbootdeveloper.domain.Article;
 import dohoon.jun.Exam.springbootdeveloper.service.BlogService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
+
+import java.util.List;
 
 @RequiredArgsConstructor
 @RestController // HTTP Response body 에 객체 데이터를 JSON 형태로 반환하는 컨트롤러
@@ -21,5 +25,17 @@ public class BlogApiController {
         Article savedArticle = blogService.save(request);
     // 요청한 자원이 성공적으로 생성되었으며 저장된 블로그 글 정보를 응답 객체에 담아 전송
         return ResponseEntity.status(HttpStatus.CREATED).body(savedArticle);
+    }
+
+    //controller 디렉터리에 있는 blogapicontroller 파일을 열어 전체 글을 조회한뒤 반환하는 findAllArticle()메서드!
+    @GetMapping("/api/articles")
+    public ResponseEntity<List<ArticleResponse>> findAllArticles(){
+        List<ArticleResponse> articles = blogService.findAll()
+                .stream()
+                .map(ArticleResponse::new)
+                .toList();
+
+        return ResponseEntity.ok()
+                .body(articles);
     }
 }
