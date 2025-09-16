@@ -13,14 +13,19 @@ import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMock
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
+import org.springframework.test.web.servlet.RequestBuilder;
 import org.springframework.test.web.servlet.ResultActions;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 import org.springframework.web.context.WebApplicationContext;
 
-import java.util.List;
 
-import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
+
+import java.util.List;
+import static org.assertj.core.api.Assertions.assertThat;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.delete;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 //번거롭게 실제 웹 서버를 띄우지 않고, Spring App설정과 동일한 가짜 환경을 만들어 컨트롤러 기능 테스트를 진행하는 것!
@@ -68,6 +73,63 @@ class BlogApiControllerTest {
         assertThat(articles.size()).isEqualTo(1);
         assertThat(articles.get(0).getTitle()).isEqualTo(title);
         assertThat(articles.get(0).getContent()).isEqualTo(content);
+
+    }
+    @DisplayName("findArticle : 블로그 글 조회 성공")
+    @Test
+    public void findArticle() throws Exception{
+        //given
+        final String url = "/api/articles/{id}";
+        final String title = "title";
+        final String content = "content";
+
+        Article saveArticle = blogRepository.save(Article.builder()
+                .title(title)
+                .content(content)
+                .build()
+        );
+        //when
+        final ResultActions resultActions = mockMvc.perform(get(url, saveArticle.getId()));
+        //then
+        resultActions
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.content").value(content))
+                .andExpect(jsonPath("$.title").value(title));
+    }
+    @DisplayName("findAllArticles : 글 목록을 조회에 성공한다.")
+    @Test
+    public void findAllArticles() throws Exception {
+        //given
+        final String url = "/api/articles/{id}";
+        final String title = "title";
+        final String content = "content";
+
+        //when
+        final ResultActions resultActions = mockMvc.perform(get(url)
+                .accept(MediaType.APPLICATION_JSON));
+
+        //then
+    }
+    @DisplayName("deleteArticle : 블로그 글 삭제를 성공한다.")
+    @Test
+    public void deleteArticle() throws Exception{
+        //given
+        final String url = "/api/articles/{id}";
+        final String title = "title";
+        final String content = "content";
+
+        Article savedArticle = blogRepository.save(Article.builder()
+                .title(title)
+                .content(content)
+                .build()
+        );
+        //when
+        mockMvc.perform(delete(url, savedArticle.getId()))
+                .andExpect(status().isOk());
+
+        //then
+        List<Article> articles = blogRepository.findAll();
+        assertThat(articles).isEmpty();
     }
 
 }

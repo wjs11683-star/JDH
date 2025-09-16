@@ -23,4 +23,12 @@ public class BlogService {
     public List<Article> findAll(){
         return blogRepository.findAll();
     }
+    //ID 엔터티를 조회하고 없으면 IllegalArgumentException 예외처리 발생
+    public Article findByID(long id){
+        return blogRepository.findById(id)
+                .orElseThrow(() -> new IllegalArgumentException("not found : " + id));
+    }
+    public void delete(long id){
+        blogRepository.deleteById(id);
+    }
 }
