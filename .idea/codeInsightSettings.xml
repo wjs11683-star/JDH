@@ -3,6 +3,7 @@
   <component name="JavaProjectCodeInsightSettings">
     <included-static-names>
       <name>org.assertj.core.api.AssertionsForClassTypes.assertThat</name>
+      <name>javax.swing.UIManager.put</name>
     </included-static-names>
   </component>
 </project>

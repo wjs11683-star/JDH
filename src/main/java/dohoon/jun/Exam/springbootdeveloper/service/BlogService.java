@@ -3,7 +3,9 @@ package dohoon.jun.Exam.springbootdeveloper.service;
 
 import dohoon.jun.Exam.repository.BlogRepository;
 import dohoon.jun.Exam.springbootdeveloper.DTO.AddArticleRequest;
+import dohoon.jun.Exam.springbootdeveloper.DTO.UpdateArticleRequest;
 import dohoon.jun.Exam.springbootdeveloper.domain.Article;
+import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
@@ -30,5 +32,13 @@ public class BlogService {
     }
     public void delete(long id){
         blogRepository.deleteById(id);
+    }
+    @Transactional // 트랜잭션 메서드
+    public Article update(long id, UpdateArticleRequest request){
+        Article article = blogRepository.findById(id)
+                .orElseThrow(() -> new IllegalArgumentException("not found" + id));
+        article.update(request.getTitle(), request.getContent());
+
+        return article;
     }
 }
