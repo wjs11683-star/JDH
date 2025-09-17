@@ -1,6 +1,7 @@
 package dohoon.jun.Exam.springbootdeveloper.Controller;
 import dohoon.jun.Exam.springbootdeveloper.DTO.AddArticleRequest;
 import dohoon.jun.Exam.springbootdeveloper.DTO.ArticleResponse;
+import dohoon.jun.Exam.springbootdeveloper.DTO.UpdateArticleRequest;
 import dohoon.jun.Exam.springbootdeveloper.domain.Article;
 import dohoon.jun.Exam.springbootdeveloper.service.BlogService;
 import lombok.RequiredArgsConstructor;
@@ -49,5 +50,12 @@ public class BlogApiController {
 
         return ResponseEntity.ok()
                 .build();
+    }
+    @PutMapping("/api/articles/{id}")
+    public ResponseEntity<Article> updateArticle(@PathVariable long id, @RequestBody UpdateArticleRequest request){
+        Article updatedArticle = blogService.update(id, request);
+
+        return ResponseEntity.ok()
+                .body(updatedArticle);
     }
 }
