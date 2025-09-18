@@ -130,6 +130,7 @@ class BlogApiControllerTest {
         //then
         List<Article> articles = blogRepository.findAll();
         assertThat(articles).isEmpty();
+
     }
 
 }
