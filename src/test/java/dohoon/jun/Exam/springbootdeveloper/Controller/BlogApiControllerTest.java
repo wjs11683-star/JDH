@@ -23,10 +23,10 @@ import org.springframework.web.context.WebApplicationContext;
 
 import java.util.List;
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.springframework.mock.http.server.reactive.MockServerHttpRequest.put;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.delete;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.put;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
@@ -102,15 +102,23 @@ class BlogApiControllerTest {
     @Test
     public void findAllArticles() throws Exception {
         //given
-        final String url = "/api/articles/{id}";
+        final String url = "/api/articles";
         final String title = "title";
         final String content = "content";
+        blogRepository.save(Article.builder()
+                .title(title)
+                .content(content)
+                .build());
 
         //when
         final ResultActions resultActions = mockMvc.perform(get(url)
                 .accept(MediaType.APPLICATION_JSON));
 
         //then
+        resultActions
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$[0].content").value(content))
+                .andExpect(jsonPath("$[0].title").value(title));
     }
     @DisplayName("deleteArticle : 블로그 글 삭제를 성공한다.")
     @Test
@@ -138,7 +146,7 @@ class BlogApiControllerTest {
     @Test
     public void updateArticle() throws Exception{
         //given
-        final String url = "/api/Articles/{id}";
+        final String url = "/api/articles/{id}";
         final String title = "title";
         final String content = "content";
 
@@ -149,8 +157,8 @@ class BlogApiControllerTest {
 
         final String newTitle = "new title";
         final String newContent = "new content";
-
         UpdateArticleRequest request = new UpdateArticleRequest(newTitle, newContent);
+
         //when
         ResultActions result = mockMvc.perform(put(url, savedArticle.getId())
                 .contentType(MediaType.APPLICATION_JSON_VALUE)
@@ -158,9 +166,7 @@ class BlogApiControllerTest {
 
         //then
         result.andExpect(status().isOk());
-
         Article article = blogRepository.findById(savedArticle.getId()).get();
-
         assertThat(article.getTitle()).isEqualTo(newTitle);
         assertThat(article.getContent()).isEqualTo(newContent);
     }
