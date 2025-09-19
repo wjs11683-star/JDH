@@ -1,0 +1,20 @@
+타임리프는 템플릿 엔진 ( JSP, 타임리프, 프리마커 이것이 템플릿엔진)
+스프링 서버에서 데이터를 받아 웹페이지 에 데이터를 넣어 보여주는 도구 (HTML과 함께 사용)
+예시)
+<h1> </h1> HTML 에선 이렇게 테그를 이용하여 사용하지만
+<h1 text=${변수}> 템플릿 엔진은 이런식으로 사용함
+
+타임리프 표현식
+${} -> 변수의 값 표현
+#{} -> 속성 파일 값 표현
+@{} -> URL 표현
+*{} -> 선택한 변수의 표현식. th:object에서 선택한 객체 접근
+
+타임리프 문법
+th:text -> 텍스트를 표현할 때 사용 -> 예시 th:text = ${person.name}
+th:each -> 컬렉션을 반복할 때 사용 -> 예시 th:each = "person : ${persons}"
+th:if -> 조건이 true 떄만 표시 -> th:if = "${person.age} >= 20"
+th:unless -> 조건이 false 때만 표시 -> th:unless = "${person.age} >= 20"
+th:href -> 이동경로 -> th:href = "@{/person(id = ${persons.id})}"
+th:with -> 변수값 지정 -> th:with ="name = ${person.name}"
+th:object -> 선택한 객체로 지정 -> th:object = "${person}"
