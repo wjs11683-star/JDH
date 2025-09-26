@@ -39,7 +39,7 @@ public class BlogApiController {
     //@PathVariable -> URL에서 값을 가져오는 에너테이션, /api/articles/3 get요청을 받으면 id = 3 이 들어옴
      @GetMapping("/api/articles/{id}")
     public ResponseEntity<ArticleResponse> findArticle(@PathVariable long id){
-        Article article = blogService.findByID(id);
+        Article article = blogService.findById(id);
 
         return ResponseEntity.ok()
                 .body(new ArticleResponse(article));
